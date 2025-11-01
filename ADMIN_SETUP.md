@@ -5,6 +5,33 @@
 **Email:** admin@pranicsoil.com
 **Password:** Admin@PranicSoil2024
 
+## ⚠️ IMPORTANT: First Time Setup
+
+If you get an "Invalid login credentials" error, follow these steps to create the admin account:
+
+### Step 1: Register the Admin Account
+1. Go to the **Registration Page**
+2. Fill in the form with:
+   - **Email:** `admin@pranicsoil.com`
+   - **Password:** `Admin@PranicSoil2024`
+   - **Full Name:** `Admin User` (or your preferred name)
+   - **Phone:** (optional)
+   - **Role:** Select ANY role (gardener, farmer, or rancher - doesn't matter)
+
+3. Click "Create Account"
+
+### Step 2: System Updates Your Role Automatically
+- After registration, the database will automatically detect the admin email
+- Your role will be automatically changed from whatever you selected to "admin"
+- This happens through a database migration that's already set up
+
+### Step 3: Login as Admin
+- Now go back to the **Login Page**
+- Use the credentials:
+  - Email: `admin@pranicsoil.com`
+  - Password: `Admin@PranicSoil2024`
+- You should now see an "Admin" tab in the sidebar
+
 ## Admin Features
 
 ### Customer Management
