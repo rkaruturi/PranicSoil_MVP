@@ -18,7 +18,8 @@ import { ProfileSection } from '../components/ProfileSection';
 import { TodoList } from '../components/TodoList';
 import { DocumentsList } from '../components/DocumentsList';
 import { ServiceAgreements } from '../components/ServiceAgreements';
-import { AdminPanel } from '../components/AdminPanel';
+import { AdminCustomerList } from '../components/AdminCustomerList';
+import { AdminCustomerView } from '../components/AdminCustomerView';
 
 type TabType = 'overview' | 'profile' | 'documents' | 'todos' | 'chat' | 'agreements' | 'admin';
 
@@ -26,6 +27,7 @@ export function DashboardPage() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [viewingCustomerId, setViewingCustomerId] = useState<string | null>(null);
 
   const handleSignOut = async () => {
     await signOut();
@@ -164,7 +166,18 @@ export function DashboardPage() {
           {activeTab === 'todos' && <TodoList />}
           {activeTab === 'agreements' && <ServiceAgreements />}
           {activeTab === 'chat' && <ChatInterface />}
-          {activeTab === 'admin' && profile?.role === 'admin' && <AdminPanel />}
+          {activeTab === 'admin' && profile?.role === 'admin' && (
+            viewingCustomerId ? (
+              <AdminCustomerView
+                customerId={viewingCustomerId}
+                onBack={() => setViewingCustomerId(null)}
+              />
+            ) : (
+              <AdminCustomerList
+                onViewCustomer={(customerId) => setViewingCustomerId(customerId)}
+              />
+            )
+          )}
         </div>
       </main>
     </div>

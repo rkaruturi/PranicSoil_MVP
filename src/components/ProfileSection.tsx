@@ -1,17 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Loader2, User, Lock, Bell, Camera } from 'lucide-react';
+import { Profile } from '../types/database';
 
-export function ProfileSection() {
-  const { profile } = useAuth();
-  const [loading, setLoading] = useState(false);
+interface ProfileSectionProps {
+  profileId?: string;
+  isAdminView?: boolean;
+}
+
+export function ProfileSection({ profileId, isAdminView }: ProfileSectionProps = {}) {
+  const { profile: authProfile } = useAuth();
+  const [profile, setProfile] = useState<Profile | null>(isAdminView && profileId ? null : authProfile);
+  const [loading, setLoading] = useState(isAdminView && profileId ? true : false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || '');
   const [notificationsEnabled, setNotificationsEnabled] = useState(
     profile?.notifications_enabled ?? true
   );
+
+  useEffect(() => {
+    if (isAdminView && profileId) {
+      const fetchProfile = async () => {
+        setLoading(true);
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', profileId)
+            .maybeSingle();
+
+          if (error) throw error;
+          if (data) {
+            setProfile(data);
+            setAvatarUrl(data.avatar_url || '');
+            setNotificationsEnabled(data.notifications_enabled ?? true);
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Failed to load profile');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProfile();
+    }
+  }, [profileId, isAdminView]);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -57,6 +91,10 @@ export function ProfileSection() {
 
   const handleAvatarUpdate = async () => {
     if (!profile) return;
+    if (isAdminView) {
+      setError('Cannot update avatar in admin view');
+      return;
+    }
 
     setLoading(true);
     setError('');
