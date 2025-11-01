@@ -12,12 +12,11 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const testEmail = `testfarmer${Date.now()}@test.com`;
+    const testEmail = `testrancher${Date.now()}@test.com`;
     const testPassword = 'TestPass123!';
 
-    console.log('Testing registration for:', testEmail);
+    console.log('Testing rancher registration for:', testEmail);
 
-    // Try using signUp with anon key to simulate real user registration
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? ''
@@ -28,12 +27,12 @@ Deno.serve(async (req: Request) => {
       password: testPassword,
       options: {
         data: {
-          role: 'farmer',
-          full_name: 'Test Farmer',
-          phone: '555-1234',
-          farm_size: '50 acres',
-          crop_types: 'Corn, Wheat',
-          farming_practices: 'Organic'
+          role: 'rancher',
+          full_name: 'Test Rancher',
+          phone: '555-7777',
+          ranch_size: '500 acres',
+          livestock_types: 'Cattle, Sheep',
+          grazing_management: 'Rotational'
         }
       }
     });
@@ -52,20 +51,17 @@ Deno.serve(async (req: Request) => {
 
     console.log('User created:', data.user?.id);
 
-    // Use service role to check tables
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Check if profile was created
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', data.user?.id)
       .maybeSingle();
 
-    // Check if farm was created
     const { data: farm, error: farmError } = await supabaseAdmin
       .from('farms')
       .select('*')
