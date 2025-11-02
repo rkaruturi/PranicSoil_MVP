@@ -14,10 +14,18 @@ Deno.serve(async (req: Request) => {
   try {
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
     );
 
     const adminUserId = 'a715bb14-4390-4cdd-8bda-16414772fcbe';
+
+    console.log('Updating password for admin user:', adminUserId);
 
     const { data, error } = await supabaseAdmin.auth.admin.updateUserById(
       adminUserId,
@@ -25,11 +33,14 @@ Deno.serve(async (req: Request) => {
     );
 
     if (error) {
+      console.error('Update error:', error);
       return new Response(
         JSON.stringify({ success: false, error: error.message }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    console.log('Password updated successfully');
 
     return new Response(
       JSON.stringify({
@@ -41,6 +52,7 @@ Deno.serve(async (req: Request) => {
     );
 
   } catch (err) {
+    console.error('Exception:', err);
     return new Response(
       JSON.stringify({ 
         success: false, 
