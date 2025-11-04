@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Mic, AlertCircle, Info } from 'lucide-react';
 import { DynamicAvatar } from './DynamicAvatar';
 import { useElevenLabsAgent } from '../hooks/useElevenLabsAgent';
-import { checkMicrophonePermission, getBrowserInstructions } from '../utils/mediaPermissions';
+import { getBrowserInstructions } from '../utils/mediaPermissions';
 
 interface VoiceAgentProps {
   onClose?: () => void;
@@ -12,24 +12,28 @@ interface VoiceAgentProps {
 
 export function VoiceAgent({ onClose, contextType = 'public', userId = null }: VoiceAgentProps) {
   const [isStarted, setIsStarted] = useState(false);
-  const [permissionChecked, setPermissionChecked] = useState(false);
+  const [showPermissionRequest, setShowPermissionRequest] = useState(true);
   const [showPermissionHelp, setShowPermissionHelp] = useState(false);
   const { status, volume, isConnected, connect, disconnect, error: agentError } = useElevenLabsAgent();
 
-  const handleStart = async () => {
-    const permissionCheck = await checkMicrophonePermission();
-
-    if (permissionCheck.status === 'unsupported') {
-      return;
-    }
-
-    if (permissionCheck.status === 'denied') {
-      setShowPermissionHelp(true);
-      return;
-    }
-
+  const handleRequestPermission = async () => {
+    setShowPermissionRequest(false);
     setIsStarted(true);
-    await connect(contextType, userId);
+    const result = await connect(contextType, userId);
+
+    if (result === false) {
+      setIsStarted(false);
+    }
+  };
+
+  const handleTryAgain = async () => {
+    setShowPermissionHelp(false);
+    setIsStarted(true);
+    const result = await connect(contextType, userId);
+
+    if (result === false) {
+      setIsStarted(false);
+    }
   };
 
   const handleStop = () => {
@@ -38,19 +42,17 @@ export function VoiceAgent({ onClose, contextType = 'public', userId = null }: V
   };
 
   useEffect(() => {
-    const checkPermission = async () => {
-      const result = await checkMicrophonePermission();
-      setPermissionChecked(true);
-      if (result.status === 'denied' && result.error) {
-        setShowPermissionHelp(true);
-      }
-    };
-    checkPermission();
-
     return () => {
       disconnect();
     };
   }, [disconnect]);
+
+  useEffect(() => {
+    if (agentError && agentError.includes('PERMISSION_DENIED')) {
+      setShowPermissionHelp(true);
+      setShowPermissionRequest(false);
+    }
+  }, [agentError]);
 
   const getErrorDetails = (error: string | null) => {
     if (!error) return null;
@@ -127,16 +129,32 @@ export function VoiceAgent({ onClose, contextType = 'public', userId = null }: V
               : 'Get personalized advice for your farming operation'}
           </p>
 
-          {!isStarted && (
-            <div className="w-full mb-8 text-center">
-              <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mic className="w-12 h-12 text-green-600" />
+          {!isStarted && showPermissionRequest && (
+            <div className="w-full mb-8">
+              <div className="text-center mb-6">
+                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Mic className="w-12 h-12 text-green-600" />
+                </div>
+                <p className="text-sm text-gray-600 mb-4">
+                  {contextType === 'public'
+                    ? 'Start a voice conversation to learn about our services for gardeners, farmers, and ranchers.'
+                    : 'Your AI advisor has access to your profile and can provide personalized recommendations.'}
+                </p>
               </div>
-              <p className="text-sm text-gray-600">
-                {contextType === 'public'
-                  ? 'Start a voice conversation to learn about our services for gardeners, farmers, and ranchers.'
-                  : 'Your AI advisor has access to your profile and can provide personalized recommendations.'}
-              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <div className="flex gap-3">
+                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-blue-900 font-semibold mb-2">Microphone Access Required</p>
+                    <p className="text-blue-800 text-sm mb-4">
+                      This voice conversation feature needs access to your microphone. When you click "Allow Microphone Access" below, your browser will ask for permission.
+                    </p>
+                    <p className="text-blue-700 text-sm">
+                      Your privacy is important - we only access your microphone during active voice conversations.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -190,7 +208,7 @@ export function VoiceAgent({ onClose, contextType = 'public', userId = null }: V
                   <div className="flex-1">
                     <p className="text-red-900 font-semibold mb-1">{errorDetails.title}</p>
                     <p className="text-red-800 text-sm mb-3">{errorDetails.message}</p>
-                    {errorDetails.showHelp && (
+                    {errorDetails.showHelp && !showPermissionHelp && (
                       <button
                         onClick={() => setShowPermissionHelp(true)}
                         className="text-red-700 text-sm underline hover:text-red-900"
@@ -208,21 +226,26 @@ export function VoiceAgent({ onClose, contextType = 'public', userId = null }: V
                 <div className="flex gap-3">
                   <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
-                    <p className="text-blue-900 font-semibold mb-2">Microphone Access Required</p>
+                    <p className="text-blue-900 font-semibold mb-2">Enable Microphone in Browser Settings</p>
                     <p className="text-blue-800 text-sm mb-3">
-                      To use voice chat, you need to allow microphone access for this site.
+                      It looks like microphone access was blocked. You can enable it in your browser settings.
                     </p>
-                    <p className="text-blue-800 text-sm mb-1 font-medium">How to enable in {browserInfo.browser}:</p>
-                    <p className="text-blue-800 text-sm mb-3">{browserInfo.instructions}</p>
-                    <p className="text-blue-700 text-sm mb-3 italic">
-                      After changing permissions, close this dialog and click "Start Voice Conversation" again.
-                    </p>
-                    <button
-                      onClick={() => setShowPermissionHelp(false)}
-                      className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Got it
-                    </button>
+                    <p className="text-blue-800 text-sm mb-1 font-medium">Instructions for {browserInfo.browser}:</p>
+                    <p className="text-blue-800 text-sm mb-4">{browserInfo.instructions}</p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleTryAgain}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Try Again
+                      </button>
+                      <button
+                        onClick={() => setShowPermissionHelp(false)}
+                        className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -240,23 +263,22 @@ export function VoiceAgent({ onClose, contextType = 'public', userId = null }: V
           </div>
 
           <div className="flex gap-4 mt-8">
-            {!isStarted ? (
+            {!isStarted && showPermissionRequest ? (
               <button
-                onClick={handleStart}
-                disabled={!permissionChecked}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium shadow-lg flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                onClick={handleRequestPermission}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium shadow-lg flex items-center gap-2"
               >
                 <Mic className="w-5 h-5" />
-                {permissionChecked ? 'Start Voice Conversation' : 'Checking permissions...'}
+                Allow Microphone Access
               </button>
-            ) : (
+            ) : isStarted ? (
               <button
                 onClick={handleStop}
                 className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-lg"
               >
                 End Conversation
               </button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

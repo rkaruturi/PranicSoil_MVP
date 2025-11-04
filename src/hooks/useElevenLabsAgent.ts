@@ -7,7 +7,7 @@ interface UseElevenLabsAgentReturn {
   status: AgentStatus;
   volume: number;
   isConnected: boolean;
-  connect: (contextType: 'public' | 'authenticated', userId?: string | null) => Promise<void>;
+  connect: (contextType: 'public' | 'authenticated', userId?: string | null) => Promise<boolean>;
   disconnect: () => void;
   error: string | null;
 }
@@ -77,7 +77,7 @@ export function useElevenLabsAgent(): UseElevenLabsAgentReturn {
     }
   }, [playAudioChunk]);
 
-  const connect = useCallback(async (contextType: 'public' | 'authenticated', _userId?: string | null) => {
+  const connect = useCallback(async (contextType: 'public' | 'authenticated', _userId?: string | null): Promise<boolean> => {
     try {
       setStatus('connecting');
       setError(null);
@@ -190,12 +190,14 @@ export function useElevenLabsAgent(): UseElevenLabsAgentReturn {
         cleanup();
       };
 
+      return true;
     } catch (err) {
       console.error('Connection error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to connect';
       setError(errorMessage);
       setStatus('error');
       cleanup();
+      return false;
     }
   }, [playNextChunk]);
 
