@@ -56,7 +56,7 @@ The script will:
 2. Click **+ Add endpoint**
 3. **Endpoint URL:** 
    ```
-   https://zilrthstnuxncufdgiys.supabase.co/functions/v1/stripe-webhook
+   https://YOUR_PROJECT_ID.supabase.co/functions/v1/stripe-webhook
    ```
 4. **Select events:**
    - `customer.subscription.created`
@@ -77,8 +77,10 @@ The script will:
 Add this line to your `.env` file:
 
 ```env
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51SPvKAKYt2mzdtj0u5K3n7nl3ih8jj79OtVnTOz7da2rCzwJwvvtckunLq4rj0GDrN4IZE5Hgr0GyW8FsX9uhiPd00L4XpeWZT
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_PUBLISHABLE_KEY_HERE
 ```
+
+⚠️ Get your publishable key from: https://dashboard.stripe.com/test/apikeys
 
 ### Step 5: Test!
 

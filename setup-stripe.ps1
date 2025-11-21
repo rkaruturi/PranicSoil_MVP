@@ -77,7 +77,7 @@ Write-Host "   1. Add the Publishable Key to your .env file:" -ForegroundColor W
 Write-Host "      VITE_STRIPE_PUBLISHABLE_KEY=$STRIPE_PUBLISHABLE_KEY" -ForegroundColor Gray
 Write-Host ""
 Write-Host "   2. Configure your Stripe webhook endpoint to:" -ForegroundColor White
-Write-Host "      https://zilrthstnuxncufdgiys.supabase.co/functions/v1/stripe-webhook" -ForegroundColor Gray
+Write-Host "      https://YOUR_PROJECT_ID.supabase.co/functions/v1/stripe-webhook" -ForegroundColor Gray
 Write-Host ""
 Write-Host "   3. Select these events in Stripe webhook settings:" -ForegroundColor White
 Write-Host "      - customer.subscription.created" -ForegroundColor Gray

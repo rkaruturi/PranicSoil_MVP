@@ -4,7 +4,7 @@
 
 1. **Go to Supabase Dashboard**
    - Visit: https://supabase.com/dashboard
-   - Select your project (zilrthstnuxncufdgiys)
+   - Select your project (YOUR_PROJECT_ID)
 
 2. **Open SQL Editor**
    - Click "SQL Editor" in the left sidebar
@@ -32,7 +32,7 @@ npm install -g supabase
 
 # Link to your project
 cd PranicSoil_MVP
-supabase link --project-ref zilrthstnuxncufdgiys
+supabase link --project-ref YOUR_PROJECT_ID
 
 # Push migrations
 supabase db push

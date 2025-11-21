@@ -2,7 +2,7 @@
 -- COMPREHENSIVE FIX FOR ALL CRUD PERMISSIONS
 -- =============================================
 -- This fixes Todos and Documents functionality
--- Run this in Supabase SQL Editor: https://supabase.com/dashboard/project/zilrthstnuxncufdgiys/sql/new
+-- Run this in Supabase SQL Editor: https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql/new
 
 -- =============================================
 -- SHARED_TODOS TABLE PERMISSIONS

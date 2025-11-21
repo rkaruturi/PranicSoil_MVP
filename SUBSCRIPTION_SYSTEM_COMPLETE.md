@@ -80,8 +80,8 @@ I've built a complete, production-ready subscription system for your Pranic Soil
 ### 💳 Stripe Integration
 
 **Test Keys Configured:**
-- Publishable: `pk_test_51SPvKAKYt...`
-- Secret: `sk_test_51SPvKAKYt...`
+- Publishable: `pk_test_...` (configure in your .env file)
+- Secret: `sk_test_...` (configure in Supabase secrets - never commit this!)
 
 **Features:**
 - Stripe Checkout (hosted payment page)

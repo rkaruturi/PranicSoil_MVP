@@ -3,7 +3,7 @@
 ## Option 1: Supabase Dashboard (Easiest)
 
 1. Open this URL in your browser:
-   https://supabase.com/dashboard/project/zilrthstnuxncufdgiys/functions/elevenlabs-agent
+   https://supabase.com/dashboard/project/YOUR_PROJECT_ID/functions/elevenlabs-agent
 
 2. Click on the **"Logs"** tab
 
@@ -17,7 +17,7 @@
 Run this in PowerShell to test the function directly:
 
 ```powershell
-$url = "https://zilrthstnuxncufdgiys.supabase.co/functions/v1/elevenlabs-agent"
+$url = "https://YOUR_PROJECT_ID.supabase.co/functions/v1/elevenlabs-agent"
 $body = @{ action = "get-signed-url" } | ConvertTo-Json
 
 Invoke-WebRequest -Uri $url -Method POST -Body $body -ContentType "application/json"

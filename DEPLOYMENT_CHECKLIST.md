@@ -35,8 +35,10 @@ Billing: Recurring - Yearly
 
 Open your `.env` file and add:
 ```env
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51SPvKAKYt2mzdtj0u5K3n7nl3ih8jj79OtVnTOz7da2rCzwJwvvtckunLq4rj0GDrN4IZE5Hgr0GyW8FsX9uhiPd00L4XpeWZT
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_PUBLISHABLE_KEY_HERE
 ```
+
+⚠️ Get your publishable key from: https://dashboard.stripe.com/test/apikeys
 
 ✅ Save the file
 
@@ -71,7 +73,7 @@ Click **+ Add endpoint**
 
 **Endpoint URL:**
 ```
-https://zilrthstnuxncufdgiys.supabase.co/functions/v1/stripe-webhook
+https://YOUR_PROJECT_ID.supabase.co/functions/v1/stripe-webhook
 ```
 
 **Select these events:**
