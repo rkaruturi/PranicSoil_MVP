@@ -29,7 +29,7 @@ This will show you the exact error response.
 
 The logs should show:
 ```
-Calling ElevenLabs API with Agent ID: agent_9501k92pkwe3ep0tgjbnab2xbxcc
+Calling ElevenLabs API with Agent ID: YOUR_AGENT_ID_HERE
 API Key exists: true
 API Key length: 56
 ElevenLabs response status: 200 (or error code)

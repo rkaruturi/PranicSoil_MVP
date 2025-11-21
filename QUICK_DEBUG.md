@@ -38,7 +38,7 @@ The most common cause is aggressive timeout settings.
 
 **Go to:** https://elevenlabs.io/app/conversational-ai
 
-**Edit your agent:** `agent_9501k92pkwe3ep0tgjbnab2xbxcc`
+**Edit your agent:** `YOUR_AGENT_ID_HERE`
 
 **Change these settings:**
 

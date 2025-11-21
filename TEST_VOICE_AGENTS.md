@@ -3,8 +3,8 @@
 ## Current Configuration
 
 ### Agents Configured:
-- **PUBLIC Agent:** `agent_2201k97w3beafrst77er2w40ghdq` (Welcome page)
-- **ADVISOR Agent:** `agent_9501k92pkwe3ep0tgjbnab2xbxcc` (Authenticated users)
+- **PUBLIC Agent:** `YOUR_PUBLIC_AGENT_ID_HERE` (Welcome page)
+- **ADVISOR Agent:** `YOUR_AUTHENTICATED_AGENT_ID_HERE` (Authenticated users)
 
 ---
 

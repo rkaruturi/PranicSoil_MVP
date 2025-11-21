@@ -8,7 +8,7 @@ The voice agent connects successfully but disconnects too quickly before you can
 ### Step 1: Open Your Agent Settings
 
 1. Go to: https://elevenlabs.io/app/conversational-ai
-2. Select your agent: `agent_9501k92pkwe3ep0tgjbnab2xbxcc`
+2. Select your agent: `YOUR_AGENT_ID_HERE`
 3. Click **"Edit"** or **"Settings"**
 
 ### Step 2: Adjust Conversation Settings
